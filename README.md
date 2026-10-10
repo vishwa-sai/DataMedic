@@ -14,44 +14,7 @@ cleaned file plus a report of exactly what changed. The original file is never m
 
 ---
 
-## 1. Run it (Windows PowerShell)
-
-Project location: `D:\Hackathon\DataMedic`
-
-```powershell
-cd D:\Hackathon\DataMedic
-
-# one-time setup
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1          # if blocked: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-python -m pip install -r requirements.txt
-
-# start the app and open the browser
-python run.py --open
-```
-
-Open <http://127.0.0.1:5000> if the browser does not open by itself. Stop with `Ctrl+C`.
-
-Next time, only these are needed:
-
-```powershell
-cd D:\Hackathon\DataMedic
-.\.venv\Scripts\Activate.ps1
-python run.py --open
-```
-
-Options: `python run.py --port 8080`, `--host 0.0.0.0` (let other devices on your network connect — only on a trusted network, there is no login).
-
-Tested with **Python 3.13.14**: Flask 3.1.3, pandas 3.0.6, NumPy 2.5.3, openpyxl 3.1.5, xlrd 2.0.2, Waitress 3.0.2 (all installed from wheels, no compiler needed).
-
-### Try it in 60 seconds
-Sample files are in `samples\`: `messy_customers.csv` / `.xlsx` / `.xls`, `dates_and_numbers.csv`, plus deliberately broken files
-(`malformed.csv`, `empty.csv`, `encoding_cp1252.csv`). Reviewed expected outputs are in `samples\expected\`.
-Regenerate samples: `python scripts\make_samples.py`.
-
----
-
-## 2. The three stages
+## 1. The three stages
 
 | Stage | What happens |
 |---|---|
@@ -80,7 +43,7 @@ duplicate removal (on the values *after* those steps) → missing-value strategy
 
 ---
 
-## 3. The 500 MB limit (524,288,000 bytes)
+## 2. The 500 MB limit (524,288,000 bytes)
 
 Defined once in `datamedic/config.py` (`MAX_FILE_BYTES`) and enforced consistently:
 
@@ -108,10 +71,9 @@ a file of **524,288,001 bytes** → HTTP 413, nothing left on disk. Raw results:
 
 ---
 
-## 4. Project layout
+## 3. Project layout
 
 ```
-D:\Hackathon\DataMedic
 ├─ run.py                     start the server (Waitress)
 ├─ requirements.txt
 ├─ datamedic\                 backend package
@@ -133,7 +95,7 @@ D:\Hackathon\DataMedic
 └─ docs\                      ARCHITECTURE, TESTING, BENCHMARKS, DEMO, SECURITY, screenshots
 ```
 
-## 5. HTTP API (used by the UI)
+## 4. HTTP API (used by the UI)
 
 | Method & path | Purpose |
 |---|---|
@@ -148,7 +110,7 @@ D:\Hackathon\DataMedic
 
 States: `uploaded → analyzing → analyzed → processing → completed`, `failed` (with `failed_stage`). Illegal transitions return `409`.
 
-## 6. Tests
+## 5. Tests
 
 ```powershell
 python -m pytest -q                      # 79 automated tests, ~10 s
@@ -159,7 +121,7 @@ python scripts\limit_check.py            # real 500 MB boundary test (~5 min, ne
 ```
 See `docs\TESTING.md` for the coverage matrix, the manual checklist and the list of what is **not** tested.
 
-## 7. Known limitations (honest list)
+## 6. Known limitations (honest list)
 
 * The **first row is always the header**. Only the first non-empty sheet of a workbook is analysed (other sheets are listed in a warning). Fully blank rows in Excel are skipped; CSV rows consisting only of delimiters are kept as data.
 * Excel formulas are read as their last *saved* values (a workbook that was never opened in Excel may have none). Merged cells, formatting, charts and macros are not preserved; output is a flat table.
@@ -173,6 +135,6 @@ See `docs\TESTING.md` for the coverage matrix, the manual checklist and the list
 * No authentication: anyone who can reach the server can use it (and see job ids they know). Job ids are 128-bit random. Run it on localhost or a trusted network.
 * Server restarts mark running jobs as failed (state is on disk; work is not resumable).
 
-## 8. Security & error-handling notes → `docs\SECURITY.md`
+## 7. Security & error-handling notes → `docs\SECURITY.md`
 
-## 9. Hackathon material → `docs\DEMO.md` (demo script, judge explanation, slide outline, Q&A)
+## 8. Hackathon material → `docs\DEMO.md` (demo script, judge explanation, slide outline, Q&A)
