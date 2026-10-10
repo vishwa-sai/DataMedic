@@ -8,6 +8,7 @@ Your original file is never touched.
 
 ---
 
+<<<<<<< HEAD
 ## What it does
 
 DataMedic scans `.csv`, `.xlsx`, or `.xls` files, counts real issues (not guesses), lets you pick treatments, previews before/after, applies changes to every row, and gives you:
@@ -21,6 +22,9 @@ No login. No database. No API key. Just upload, review, clean, download.
 ---
 
 ## The three stages
+=======
+## 1. The three stages
+>>>>>>> 7426bbe960793e0e34097fa8d5a1b6fc8eb1d4bf
 
 **1. Upload & Analyze** — Drag, drop, or browse. The server validates the file, creates a job, and scans every row in chunks. You'll see real counts of what's wrong.
 
@@ -30,7 +34,11 @@ No login. No database. No API key. Just upload, review, clean, download.
 
 ---
 
+<<<<<<< HEAD
 ## Treatments (all optional, all previewed)
+=======
+## 2. The 500 MB limit (524,288,000 bytes)
+>>>>>>> 7426bbe960793e0e34097fa8d5a1b6fc8eb1d4bf
 
 - Trim whitespace · collapse repeated spaces
 - Normalize column names (`snake_case`, unique, never blank)
@@ -47,6 +55,7 @@ No login. No database. No API key. Just upload, review, clean, download.
 
 ---
 
+<<<<<<< HEAD
 ## Built to be conservative
 
 - Columns that look like IDs (`id`, `zip`, `phone`, `code`…) and values with leading zeros are **never** converted. A ZIP `01234` stays `01234`.
@@ -89,6 +98,33 @@ docs/                      # ARCHITECTURE, TESTING, BENCHMARKS, DEMO, SECURITY
 ```
 
 ---
+=======
+## 3. Project layout
+
+```
+├─ run.py                     start the server (Waitress)
+├─ requirements.txt
+├─ datamedic\                 backend package
+│  ├─ __init__.py             Flask app factory, routes, error handlers, security headers
+│  ├─ config.py               every limit (500 MB, chunk sizes, timeouts)
+│  ├─ jobs.py                 job store, state machine, worker pool, previews, downloads, cleanup
+│  ├─ ingest.py               validation, encoding/delimiter detection, Excel → CSV streaming, chunk reader
+│  ├─ analyzer.py             streaming diagnosis + issue generation
+│  ├─ plan.py                 treatment-plan validation / resolution
+│  ├─ pipeline.py             the repair engine (shared by preview and export)
+│  ├─ patterns.py             numeric / date / email / placeholder detection helpers
+│  ├─ dedupe.py               cross-chunk duplicate tracker
+│  ├─ writers.py              streaming CSV/XLSX writers + output verification
+│  └─ report.py               JSON + HTML quality report
+├─ static\                    index.html, css\styles.css, js\app.js
+├─ samples\                   messy inputs and reviewed expected outputs
+├─ tests\                     pytest suite (+ optional browser E2E)
+├─ scripts\                   make_samples, make_large_csv, benchmark, limit_check, make_expected, make_zip
+└─ docs\                      ARCHITECTURE, TESTING, BENCHMARKS, DEMO, SECURITY, screenshots
+```
+
+## 4. HTTP API (used by the UI)
+>>>>>>> 7426bbe960793e0e34097fa8d5a1b6fc8eb1d4bf
 
 ## API (used by the UI)
 
@@ -106,7 +142,11 @@ docs/                      # ARCHITECTURE, TESTING, BENCHMARKS, DEMO, SECURITY
 | GET | `/api/jobs/<id>/download/report` | Download HTML report |
 | GET | `/api/jobs/<id>/download/report-json` | Download JSON report |
 
+<<<<<<< HEAD
 States: `uploaded → analyzing → analyzed → processing → completed`, plus `failed`.
+=======
+## 5. Tests
+>>>>>>> 7426bbe960793e0e34097fa8d5a1b6fc8eb1d4bf
 
 ---
 
@@ -119,10 +159,15 @@ python scripts/benchmark.py --sizes 1 25 100
 python scripts/limit_check.py            # 500 MB boundary test
 ```
 
+<<<<<<< HEAD
 ---
+=======
+## 6. Known limitations (honest list)
+>>>>>>> 7426bbe960793e0e34097fa8d5a1b6fc8eb1d4bf
 
 ## Honest limitations
 
+<<<<<<< HEAD
 - First row is always the header. Only the first non-empty Excel sheet is analyzed.
 - Excel formulas are read as their last saved values. Merged cells, formatting, charts, and macros are not preserved.
 - CSV rows with fewer fields than the header are padded; rows with more fields are rejected.
@@ -147,3 +192,8 @@ See `docs/SECURITY.md`.
 **https://datamedic.onrender.com**
 
 Built for the SaaSsum AI hackathon. Team Vertex ·
+=======
+## 7. Security & error-handling notes → `docs\SECURITY.md`
+
+## 8. Hackathon material → `docs\DEMO.md` (demo script, judge explanation, slide outline, Q&A)
+>>>>>>> 7426bbe960793e0e34097fa8d5a1b6fc8eb1d4bf
