@@ -1,0 +1,8 @@
+customer_id,full_name,email,phone,signup_date,amount,city,notes
+001,Alice Johnson,alice@example.com,0123456789,2023-01-15 00:00:00,"$1,200.50",Paris,VIP
+002,Bob   Smith,bob@example.com,0987654321,2023-01-15 00:00:00,950,London,
+003,Carol White,carol@example,0555123456,2023-01-17 00:00:00,"1,000",Berlin,N/A
+006,Frank Green,frank@@example.com,0333111222,2023-01-20 00:00:00,75.25,Madrid,
+007,Grace Hall,grace@example.com,0222333444,2023-01-21 00:00:00,1 000,Rome,none
+002,Bob Smith,bob@example.com,0987654321,2023-01-15 00:00:00,950,London,
+008,Heidi King,heidi@example.com,0111222333,2023-01-23 14:30:00,"$2,500",Vienna,

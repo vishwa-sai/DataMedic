@@ -1,0 +1,90 @@
+[
+  {
+    "scenario": "default",
+    "plan": {},
+    "input_bytes": 1048002,
+    "python": "3.13.14",
+    "date": "2026-10-10",
+    "upload_and_analyze_seconds": 0.5,
+    "rows": 15939,
+    "columns": 7,
+    "duplicates_found": 318,
+    "process_seconds": 0.4,
+    "peak_rss_mb_incl_interpreter": 107,
+    "baseline_rss_mb": 90,
+    "success": true,
+    "rows_out": 15621,
+    "duplicates_removed": 318,
+    "output_bytes": 1019688,
+    "missing_filled": 0
+  },
+  {
+    "scenario": "default",
+    "plan": {},
+    "input_bytes": 26213832,
+    "python": "3.13.14",
+    "date": "2026-10-10",
+    "upload_and_analyze_seconds": 7.3,
+    "rows": 390970,
+    "columns": 7,
+    "duplicates_found": 7801,
+    "process_seconds": 5.2,
+    "peak_rss_mb_incl_interpreter": 258,
+    "baseline_rss_mb": 98,
+    "success": true,
+    "rows_out": 383169,
+    "duplicates_removed": 7801,
+    "output_bytes": 25503535,
+    "missing_filled": 0
+  },
+  {
+    "scenario": "default",
+    "plan": {},
+    "input_bytes": 104857012,
+    "python": "3.13.14",
+    "date": "2026-10-10",
+    "upload_and_analyze_seconds": 31.0,
+    "rows": 1551596,
+    "columns": 7,
+    "duplicates_found": 30955,
+    "process_seconds": 21.6,
+    "peak_rss_mb_incl_interpreter": 280,
+    "baseline_rss_mb": 144,
+    "success": true,
+    "rows_out": 1520641,
+    "duplicates_removed": 30955,
+    "output_bytes": 102017723,
+    "missing_filled": 0
+  },
+  {
+    "scenario": "heavy",
+    "plan": {
+      "collapse_spaces": true,
+      "placeholders_as_missing": true,
+      "emails": {
+        "lowercase": true
+      },
+      "missing": {
+        "strategy": "median",
+        "columns": [
+          3
+        ]
+      }
+    },
+    "input_bytes": 104857012,
+    "python": "3.13.14",
+    "date": "2026-10-10",
+    "upload_and_analyze_seconds": 29.9,
+    "rows": 1551596,
+    "columns": 7,
+    "duplicates_found": 30955,
+    "process_seconds": 34.2,
+    "peak_rss_mb_incl_interpreter": 307,
+    "baseline_rss_mb": 89,
+    "success": true,
+    "rows_out": 1520641,
+    "duplicates_removed": 30955,
+    "output_bytes": 102369921,
+    "missing_filled": 379940
+  }
+]

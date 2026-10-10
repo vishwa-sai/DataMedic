@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DataMedic — Intelligent Data Quality &amp; Repair</title>
+  <meta name="description" content="Upload a messy CSV or Excel file, review the diagnosis, choose treatments, compare before and after, and download a cleaned file with a full report.">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="brand">
+    <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0f766e"/><path d="M13 7h6v6h6v6h-6v6h-6v-6H7v-6h6z" fill="#fff"/></svg>
+    <div>
+      <div class="brand-name">DataMedic</div>
+      <div class="brand-sub">Intelligent Data Quality &amp; Repair</div>
+    </div>
+  </div>
+  <ol class="stepper" id="stepper" aria-label="Progress">
+    <li><button type="button" data-step="upload" class="step"><span class="step-num">1</span><span class="step-label">Upload &amp; Analyze</span></button></li>
+    <li><button type="button" data-step="station" class="step"><span class="step-num">2</span><span class="step-label">Medic Station</span></button></li>
+    <li><button type="button" data-step="export" class="step"><span class="step-num">3</span><span class="step-label">Export &amp; Download</span></button></li>
+  </ol>
+</header>
+
+<main id="main" tabindex="-1">
+  <div id="live" class="sr-only" role="status" aria-live="polite"></div>
+
+  <!-- ============ Stage 1 ============ -->
+  <section id="view-upload" class="view" aria-labelledby="h-upload">
+    <div class="hero">
+      <h1 id="h-upload">Find what’s wrong with your data — then fix it, safely.</h1>
+      <p class="lead">Upload a messy CSV or Excel file. DataMedic scans every row, shows what it found, lets you choose the treatments, and exports a cleaned copy with a report of every change. Your original file is never modified.</p>
+    </div>
+
+    <div class="upload-card card">
+      <label id="dropzone" class="dropzone" for="file-input" tabindex="0" role="button" aria-describedby="drop-hint">
+        <svg viewBox="0 0 48 48" class="drop-icon" aria-hidden="true"><path d="M24 32V10m0 0-9 9m9-9 9 9M8 32v6a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2v-6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="drop-title">Drag &amp; drop your file here</span>
+        <span class="drop-or">or <span class="link">browse your computer</span></span>
+        <span id="drop-hint" class="hint">CSV, XLSX or XLS · up to <strong id="max-size">500 MB</strong></span>
+      </label>
+      <input id="file-input" type="file" accept=".csv,.xlsx,.xls" class="sr-only">
+
+      <div id="file-card" class="file-card" hidden>
+        <div class="file-icon" id="file-icon" aria-hidden="true">CSV</div>
+        <div class="file-meta">
+          <div class="file-name" id="file-name"></div>
+          <div class="file-sub"><span id="file-size"></span> · <span id="file-type"></span></div>
+        </div>
+        <button type="button" class="btn btn-quiet" id="btn-clear-file">Remove</button>
+      </div>
+
+      <div id="upload-error" class="alert alert-error" role="alert" hidden>
+        <div class="alert-body"><strong id="upload-error-title">Something went wrong</strong><span id="upload-error-text"></span></div>
+        <button type="button" class="btn btn-small" id="btn-retry">Retry</button>
+      </div>
+
+      <div id="upload-progress" class="progress-block" hidden>
+        <div class="progress-head"><span id="upload-phase">Uploading…</span><span id="upload-pct"></span></div>
+        <progress id="upload-bar" max="100" value="0" aria-labelledby="upload-phase"></progress>
+        <div class="hint" id="upload-detail"></div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-primary btn-large" id="btn-analyze" disabled>Analyze</button>
+        <button type="button" class="btn btn-quiet" id="btn-cancel-analysis" hidden>Cancel</button>
+      </div>
+    </div>
+
+    <ul class="trust">
+      <li><strong>Original untouched.</strong> Cleaning happens on a copy.</li>
+      <li><strong>You choose.</strong> Every treatment is optional and previewed.</li>
+      <li><strong>Full audit.</strong> Every change is counted in the report.</li>
+    </ul>
+  </section>
+
+  <!-- ============ Stage 2 ============ -->
+  <section id="view-station" class="view" aria-labelledby="h-station" hidden>
+    <div class="station-head">
+      <div>
+        <h1 id="h-station" tabindex="-1">Medic Station</h1>
+        <p class="sub"><span id="st-file"></span></p>
+      </div>
+      <button type="button" class="btn btn-quiet" id="btn-new-file">Start over with another file</button>
+    </div>
+
+    <div id="completed-banner" class="alert alert-ok" hidden>
+      <div class="alert-body"><strong>A cleaned result already exists for this job.</strong><span>Your downloads are still available. Changing treatments and pressing “Done” will replace it.</span></div>
+      <button type="button" class="btn btn-small" id="btn-view-result">View result</button>
+    </div>
+    <div id="station-error" class="alert alert-error" role="alert" hidden>
+      <div class="alert-body"><strong id="station-error-title"></strong><span id="station-error-text"></span></div>
+    </div>
+
+    <div class="metrics" id="metrics" aria-label="Diagnosis summary"></div>
+
+    <div class="station-grid">
+      <div class="station-main">
+        <div class="tabs" role="tablist" aria-label="Medic Station views">
+          <button role="tab" id="tab-diagnosis" aria-controls="panel-diagnosis" aria-selected="true" class="tab">Diagnosis <span class="count" id="count-issues"></span></button>
+          <button role="tab" id="tab-preview" aria-controls="panel-preview" aria-selected="false" class="tab" tabindex="-1">Preview: before / after</button>
+          <button role="tab" id="tab-columns" aria-controls="panel-columns" aria-selected="false" class="tab" tabindex="-1">Columns</button>
+        </div>
+        <div id="panel-diagnosis" role="tabpanel" aria-labelledby="tab-diagnosis" class="panel"></div>
+        <div id="panel-preview" role="tabpanel" aria-labelledby="tab-preview" class="panel" hidden></div>
+        <div id="panel-columns" role="tabpanel" aria-labelledby="tab-columns" class="panel" hidden></div>
+      </div>
+
+      <aside class="treatments card" aria-labelledby="h-treat">
+        <h2 id="h-treat">Treatments</h2>
+        <p class="hint">Nothing is applied until you press <strong>Done &amp; Prepare Download</strong>.</p>
+        <form id="treat-form" autocomplete="off" novalidate></form>
+        <div id="plan-error" class="alert alert-error" role="alert" hidden></div>
+        <button type="button" class="btn btn-primary btn-large btn-block" id="btn-done">Done &amp; Prepare Download</button>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ Stage 3 ============ -->
+  <section id="view-export" class="view" aria-labelledby="h-export" hidden>
+    <div class="export-head">
+      <h1 id="h-export" tabindex="-1">Export &amp; Download</h1>
+      <span class="status-pill" id="export-pill" data-state="processing">Processing</span>
+    </div>
+
+    <div id="export-processing" class="card export-card" hidden>
+      <div class="timer-row">
+        <div>
+          <div class="timer-label">Elapsed time</div>
+          <div class="timer" id="export-timer" aria-hidden="true">00:00</div>
+        </div>
+        <button type="button" class="btn btn-quiet" id="btn-cancel-processing">Cancel</button>
+      </div>
+      <div class="indeterminate" id="export-indeterminate" role="progressbar" aria-label="Processing (duration unknown)"><span></span></div>
+      <ol class="stage-list" id="stage-list"></ol>
+      <div id="stage-measure" class="progress-block" hidden>
+        <div class="progress-head"><span id="stage-measure-label"></span><span id="stage-measure-pct"></span></div>
+        <progress id="stage-bar" max="100" value="0" aria-labelledby="stage-measure-label"></progress>
+      </div>
+      <p class="hint">The percentage, when shown, is measured from rows actually processed in the current stage — it is not an estimate of total time.</p>
+    </div>
+
+    <div id="export-failed" class="card export-card" hidden>
+      <div class="alert alert-error" role="alert"><div class="alert-body"><strong>Processing failed</strong><span id="export-error-text"></span></div></div>
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="btn-retry-processing">Retry</button>
+        <button type="button" class="btn" id="btn-back-failed">Back to review</button>
+      </div>
+    </div>
+
+    <div id="export-done" hidden>
+      <div class="card export-card">
+        <h2>Your cleaned data is ready</h2>
+        <p class="sub" id="done-sub"></p>
+        <div class="downloads" id="downloads"></div>
+        <div class="actions">
+          <button type="button" class="btn" id="btn-back-review">Back to review</button>
+          <button type="button" class="btn btn-quiet" id="btn-clean-another">Clean another file</button>
+        </div>
+      </div>
+      <div class="metrics" id="result-metrics"></div>
+      <div id="result-warnings"></div>
+      <div class="card export-card">
+        <h2>Operations requested and applied</h2>
+        <div class="table-wrap"><table class="data" id="ops-table"></table></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <span>DataMedic · Team Vertex · TRI26195 · SaaSsum AI — IT &amp; AI</span>
+  <span>Your files are processed on this server only and deleted automatically after 24 hours.</span>
+</footer>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "at_limit": {
+    "bytes": 524288000,
+    "http_status": 201,
+    "upload_seconds": 3.3,
+    "analyze_seconds": 182.0,
+    "process_seconds": 106.9,
+    "rows_in": 7698189,
+    "rows_out": 7544610,
+    "duplicates_removed": 153579,
+    "output_bytes": 510120672
+  },
+  "over_limit": {
+    "bytes": 524288001,
+    "http_status": 413,
+    "message": "This file is 500.0 MB, which exceeds the 500 MB (524,288,000 bytes) limit.",
+    "job_folders_left_behind": 0
+  },
+  "server_peak_rss_mb": 383,
+  "date": "2026-10-10",
+  "python": "3.13.14"
+}
