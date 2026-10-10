@@ -715,18 +715,11 @@ async function startOver(askConfirm) {
 async function init() {
   try { S.config = await api('/api/config'); } catch { /* defaults */ }
   $('#max-size').textContent = humanSize(S.config.max_file_bytes);
+  localStorage.removeItem(KEY); // always start fresh on load
   renderFile(); updateStepper(); show('upload');
-  const id = localStorage.getItem(KEY);
-  if (!id) return;
-  try {
-    S.job = await api(`/api/jobs/${id}`);
-    const st = S.job.state;
-    if (st === 'analyzing' || st === 'uploaded') { pollAnalysis(); }
-    else if (st === 'failed' && S.job.failed_stage === 'analysis') { showUploadError('Analysis failed', S.job.error?.message || '', async () => { hideUploadError(); S.job = await post(`/api/jobs/${id}/analyze`); pollAnalysis(); }); }
-    else if (st === 'processing') { await enterStation(); show('export'); renderExport(); syncTimer(S.job); pollProcessing(); }
-    else if (st === 'completed' || (st === 'failed')) { await enterStation(); if (st === 'completed') { show('export'); renderExport(); syncTimer(S.job); } else { show('export'); renderExport(); } }
-    else await enterStation();
-  } catch { localStorage.removeItem(KEY); S.job = null; updateStepper(); }
+  return;
+
 }
+$('#brand-link').addEventListener('click', () => { if (confirm('Are you sure?')) window.location.href = '/'; });
 init();
 })();
